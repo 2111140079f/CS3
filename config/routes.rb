@@ -7,4 +7,6 @@ Rails.application.routes.draw do
   post "tops/login"
   root "tops#main"
   get "tops/logout"
+  get "tops/new"
+  post "tops/signup"
 end

@@ -8,7 +8,8 @@ class TopsController < ApplicationController
     end
 
     def login
-        if User.find_by(uid: params[:uid]) && User.find_by(pass: params[:pass])
+        user = User.find_by(uid: params[:uid])
+        if user && BCrypt::Password.new(user.pass) == params[:pass]
             session[:login_uid] = params[:uid]
             redirect_to tops_main_path
         else
@@ -18,6 +19,18 @@ class TopsController < ApplicationController
     
     def logout
         session.delete(:login_uid)
+        redirect_to tops_main_path
+    end
+    
+    def new
+        render "signup"
+    end
+    
+    def signup
+        signup_pass = BCrypt::Password.create(params[:pass])
+        user = User.new(uid: params[:uid], pass: signup_pass)
+        user.save
+        session[:login_uid] = params[:uid]
         redirect_to tops_main_path
     end
 end
